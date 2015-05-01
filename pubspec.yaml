@@ -1,0 +1,4 @@
+name: event-emitter
+version: 0.0.1
+description: Simple EventEmitter implementation in Dart
+author: Jakub Turek <ja@kubaturek.pl>
