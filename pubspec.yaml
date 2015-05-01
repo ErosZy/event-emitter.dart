@@ -2,3 +2,5 @@ name: event-emitter
 version: 0.0.1
 description: Simple EventEmitter implementation in Dart
 author: Jakub Turek <ja@kubaturek.pl>
+dev_dependencies:
+  test: '>=0.12.0 <0.13.0'
