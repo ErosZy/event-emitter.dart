@@ -113,5 +113,25 @@ void main() {
                 expect(emitter.listeners(eventAName), equals([eventHandler]));
             });
         });
+
+        group('::removeAllListeners', () {
+            test('should remove all listeners for given event if it exists', () {
+                EventEmitter emitter = new EventEmitter();
+                emitter.addListener('event', () => print('Hello!'));
+                emitter.removeAllListeners('event');
+
+                expect(emitter.listeners('event'), isEmpty);
+            });
+
+            test('should remove all listeners if no event name has been passed', () {
+                EventEmitter emitter = new EventEmitter();
+                emitter.addListener('eventA', () => print('Hello!'));
+                emitter.addListener('eventB', () => print('Salut!'));
+                emitter.removeAllListeners();
+
+                expect(emitter.listeners('eventA'), isEmpty);
+                expect(emitter.listeners('eventB'), isEmpty);
+            });
+        });
     });
 }

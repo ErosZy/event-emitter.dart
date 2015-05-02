@@ -7,7 +7,7 @@ abstract class EventEmitterInterface {
 
     void removeListener(event, listener);
 
-    void removeAllListeners(event, listener);
+    void removeAllListeners([event]);
 
     void setMaxListeners(int n);
 

@@ -27,8 +27,12 @@ class EventEmitter implements EventEmitterInterface {
         }
     }
 
-    void removeAllListeners(event, listener) {
-
+    void removeAllListeners([String event]) {
+        if (event == null) {
+            _listeners.clear();
+        } else if (_listeners.containsKey(event)) {
+            _listeners[event].clear();
+        }
     }
 
     void setMaxListeners(int n) {
