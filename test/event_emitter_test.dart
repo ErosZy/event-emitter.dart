@@ -33,5 +33,34 @@ void main() {
                 expect(emitter.listeners(eventAName), equals([eventHandler, anotherEventHandler]));
             });
         });
+
+        group('::on', () {
+            test("should add function-type listener to string-type event if event isn't registered yet", () {
+                String eventName = 'event';
+                Function eventHandler = () {
+                    print('Hello world');
+                };
+
+                EventEmitter emitter = new EventEmitter();
+                emitter.on(eventName, eventHandler);
+                expect(emitter.listeners(eventName), equals([eventHandler]));
+            });
+
+            test("should add function-type listener to string-type event if such event is already registered", () {
+                String eventAName = 'eventA';
+                Function eventHandler = () {
+                    print('Hello world');
+                };
+
+                Function anotherEventHandler = () {
+                    print('Hello again');
+                };
+
+                EventEmitter emitter = new EventEmitter();
+                emitter.on(eventAName, eventHandler);
+                emitter.on(eventAName, anotherEventHandler);
+                expect(emitter.listeners(eventAName), equals([eventHandler, anotherEventHandler]));
+            });
+        });
     });
 }

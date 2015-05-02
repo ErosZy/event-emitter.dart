@@ -13,8 +13,8 @@ class EventEmitter implements EventEmitterInterface {
         _listeners[event].add(listener);
     }
 
-    void on(event, listener) {
-
+    void on(String event, Function listener) {
+        addListener(event, listener);
     }
 
     void once(event, listener) {
