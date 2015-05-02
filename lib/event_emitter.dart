@@ -118,7 +118,7 @@ class EventEmitter {
         return handlersFound;
     }
 
-    static int listenerCount(EventEmitterInterface emitter, String event) {
+    static int listenerCount(EventEmitter emitter, String event) {
         return emitter.listeners(event).length;
     }
 }
