@@ -62,5 +62,12 @@ void main() {
                 expect(emitter.listeners(eventAName), equals([eventHandler, anotherEventHandler]));
             });
         });
+
+        group('::listeners', () {
+            test('should return empty list if none of listeners are added', () {
+                EventEmitter emitter = new EventEmitter();
+                expect(emitter.listeners('some event'), isEmpty);
+            });
+        });
     });
 }
