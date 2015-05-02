@@ -51,7 +51,7 @@ class EventEmitter implements EventEmitterInterface {
 
     }
 
-    int listenerCount(event) {
-
+    static int listenerCount(EventEmitterInterface emitter, String event) {
+        return emitter.listeners(event).length;
     }
 }

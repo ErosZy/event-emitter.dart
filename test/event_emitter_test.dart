@@ -133,5 +133,18 @@ void main() {
                 expect(emitter.listeners('eventB'), isEmpty);
             });
         });
+
+        group('[static]::listenersCount', () {
+            test('should return number of listeners for given event', () {
+                EventEmitter emitter = new EventEmitter();
+                emitter.addListener('event', () => print('Hello world!'));
+                expect(EventEmitter.listenerCount(emitter, 'event'), equals(1));
+            });
+
+            test('should return 0 if no listners are assigned for given event', () {
+                EventEmitter emitter = new EventEmitter();
+                expect(EventEmitter.listenerCount(emitter, 'event'), equals(0));
+            });
+        });
     });
 }

@@ -11,9 +11,7 @@ abstract class EventEmitterInterface {
 
     void setMaxListeners(int n);
 
-    void listeners(event);
+    List listeners(event);
 
     void emit(event, [data]);
-
-    int listenerCount(event);
 }
