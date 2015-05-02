@@ -3,4 +3,4 @@ dart:
   - stable
 
 script:
-  - ./travis.sh
+  - tools/travis.sh
