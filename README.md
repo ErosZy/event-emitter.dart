@@ -1,4 +1,6 @@
 # EventEmitter.dart
+[![Build Status](https://travis-ci.org/eps90/event-emitter.dart.svg?branch=master)](https://travis-ci.org/eps90/event-emitter.dart)
+[![Coverage Status](https://coveralls.io/repos/eps90/event-emitter.dart/badge.svg?branch=master)](https://coveralls.io/r/eps90/event-emitter.dart?branch=master)
 
 Basic implementation of EventEmitter in Dart.
 
