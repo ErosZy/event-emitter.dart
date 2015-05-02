@@ -13,5 +13,5 @@ if [ "$REPO_TOKEN" ]; then
     --token $REPO_TOKEN \
     --retry 2 \
     --exclude-test-files \
-    test/event_emitter_test.dart
+    test/test_all.dart
 fi
