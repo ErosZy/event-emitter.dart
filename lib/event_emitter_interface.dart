@@ -13,5 +13,5 @@ abstract class EventEmitterInterface {
 
     List listeners(event);
 
-    void emit(event, [data]);
+    void emit(event);
 }

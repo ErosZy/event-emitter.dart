@@ -47,8 +47,12 @@ class EventEmitter implements EventEmitterInterface {
         return [];
     }
 
-    void emit(event, [data]) {
-
+    void emit(String event) {
+        if (_listeners.containsKey(event)) {
+            _listeners[event].forEach((Function handler) {
+                handler();
+            });
+        }
     }
 
     static int listenerCount(EventEmitterInterface emitter, String event) {

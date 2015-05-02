@@ -146,5 +146,15 @@ void main() {
                 expect(EventEmitter.listenerCount(emitter, 'event'), equals(0));
             });
         });
+
+        group('::emit', () {
+            test('should execute handler for given event', () {
+                EventEmitter emitter = new EventEmitter();
+                int i = 1;
+                emitter.addListener('event', () => i++);
+                emitter.emit('event');
+                expect(i, equals(2));
+            });
+        });
     });
 }
