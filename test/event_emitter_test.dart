@@ -68,6 +68,14 @@ void main() {
                 EventEmitter emitter = new EventEmitter();
                 expect(emitter.listeners('some event'), isEmpty);
             });
+
+            test('should return both listeners and one-time listeners for event', () {
+                EventEmitter emitter = new EventEmitter();
+                int i = 0;
+                emitter.addListener('eventA', () => i++);
+                emitter.once('eventA', () => i++);
+                expect(emitter.listeners('eventA').length, equals(2));
+            });
         });
 
         group('::removeListener', () {
@@ -112,6 +120,19 @@ void main() {
                 emitter.removeListener(eventAName, anotherHandler);
                 expect(emitter.listeners(eventAName), equals([eventHandler]));
             });
+
+            test("should remove one-time event handlers", () {
+                String eventName = 'eventA';
+
+                Function eventHandler = () {
+                    print('Hello world');
+                };
+
+                EventEmitter emitter = new EventEmitter();
+                emitter.once(eventName, eventHandler);
+                emitter.removeListener(eventName, eventHandler);
+                expect(emitter.listeners(eventName), isEmpty);
+            });
         });
 
         group('::removeAllListeners', () {
@@ -131,6 +152,14 @@ void main() {
 
                 expect(emitter.listeners('eventA'), isEmpty);
                 expect(emitter.listeners('eventB'), isEmpty);
+            });
+
+            test('should remove also one-time events', () {
+                EventEmitter emitter = new EventEmitter();
+                emitter.addListener('event', () => print('Hello!'));
+                emitter.once('event', () => print('Salut!'));
+                emitter.removeAllListeners('event');
+                expect(emitter.listeners('event'), isEmpty);
             });
         });
 
@@ -154,6 +183,17 @@ void main() {
                 emitter.addListener('event', () => i++);
                 emitter.emit('event');
                 expect(i, equals(2));
+            });
+        });
+
+        group('::once', () {
+            test('should declare handler that is immediately removed after executing', () {
+                EventEmitter emitter = new EventEmitter();
+                int i = 0;
+                emitter.once('event', () => i++);
+                emitter.emit('event');
+                expect(i, equals(1));
+                expect(emitter.listeners('event'), isEmpty);
             });
         });
     });
