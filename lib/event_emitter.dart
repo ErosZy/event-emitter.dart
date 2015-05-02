@@ -8,28 +8,30 @@ class EventEmitter implements EventEmitterInterface {
     static int defaultMaxListeners = 10;
     int _maxListeners;
 
-    void addListener(String event, Function listener) {
+    EventEmitter addListener(String event, Function listener) {
         if (!_listeners.containsKey(event)) {
             _listeners[event] = [];
         }
 
-        verifyListenersLimit(event);
-
+        _verifyListenersLimit(event);
         _listeners[event].add(listener);
+
+        return this;
     }
 
-    void on(String event, Function listener) {
-        addListener(event, listener);
+    EventEmitter on(String event, Function listener) {
+        return addListener(event, listener);
     }
 
-    void once(String event, Function listener) {
+    EventEmitter once(String event, Function listener) {
         if (!_oneTimeListeners.containsKey(event)) {
             _oneTimeListeners[event] = [];
         }
 
-        verifyListenersLimit(event);
-
+        _verifyListenersLimit(event);
         _oneTimeListeners[event].add(listener);
+
+        return this;
     }
 
     int _getMaxListeners() {
@@ -40,7 +42,7 @@ class EventEmitter implements EventEmitterInterface {
         return _maxListeners;
     }
 
-    void verifyListenersLimit(String event) {
+    void _verifyListenersLimit(String event) {
         int nextCount = ++listeners(event).length;
         int maxListeners = _getMaxListeners();
 
@@ -49,7 +51,7 @@ class EventEmitter implements EventEmitterInterface {
         }
     }
 
-    void removeListener(String event, Function listener) {
+    EventEmitter removeListener(String event, Function listener) {
         if (_listeners.containsKey(event) && _listeners[event].contains(listener)) {
             _listeners[event].remove(listener);
         }
@@ -57,9 +59,11 @@ class EventEmitter implements EventEmitterInterface {
         if (_oneTimeListeners.containsKey(event) && _oneTimeListeners[event].contains(listener)) {
             _oneTimeListeners[event].remove(listener);
         }
+
+        return this;
     }
 
-    void removeAllListeners([String event]) {
+    EventEmitter removeAllListeners([String event]) {
         if (event == null) {
             _listeners.clear();
         } else{
@@ -71,10 +75,14 @@ class EventEmitter implements EventEmitterInterface {
                 _oneTimeListeners[event].clear();
             }
         }
+
+        return this;
     }
 
-    void setMaxListeners(int listenersCount) {
+    EventEmitter setMaxListeners(int listenersCount) {
         _maxListeners = listenersCount;
+
+        return this;
     }
 
     List listeners(String event) {
@@ -90,20 +98,26 @@ class EventEmitter implements EventEmitterInterface {
         return result;
     }
 
-    void emit(String event) {
+    bool emit(String event) {
+        bool handlersFound = false;
+
         if (_listeners.containsKey(event)) {
+            handlersFound = true;
             _listeners[event].forEach((Function handler) {
                 handler();
             });
         }
 
         if (_oneTimeListeners.containsKey(event)) {
+            handlersFound = true;
             for (int i = 0; i < _oneTimeListeners[event].length; i++) {
                 Function handler = _oneTimeListeners[event][i];
                 handler();
                 _oneTimeListeners[event].removeAt(i);
             }
         }
+
+        return handlersFound;
     }
 
     static int listenerCount(EventEmitterInterface emitter, String event) {
