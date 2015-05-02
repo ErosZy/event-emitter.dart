@@ -5,6 +5,10 @@ import 'package:event-emitter/event_emitter.dart';
 
 void main() {
     group('Event emitter', () {
+        setUp(() {
+            EventEmitter.defaultMaxListeners = 10;
+        });
+
         group('::addListener', () {
             test("should add function-type listener to string-type event if event isn't registered yet", () {
                 String eventName = 'event';
@@ -194,6 +198,31 @@ void main() {
                 emitter.emit('event');
                 expect(i, equals(1));
                 expect(emitter.listeners('event'), isEmpty);
+            });
+        });
+
+        group('event listeners limit', () {
+            test('it should not allow to add more event listeners than defaultMaxListeners value', () {
+                EventEmitter.defaultMaxListeners = 2;
+                EventEmitter emitter = new EventEmitter();
+                emitter.addListener('event', () => print('Hello world'));
+                expect(() => emitter.addListener('event', () => print('Hello world')), throws);
+            });
+
+            test('it should not allow to add more one-time event listeners than defaultMaxListeners value', () {
+                EventEmitter.defaultMaxListeners = 2;
+                EventEmitter emitter = new EventEmitter();
+                emitter.addListener('event', () => print('Hello world'));
+                expect(() => emitter.once('event', () => print('Hello world')), throws);
+            });
+
+            test('it should allow to override per-instance event listeners limit', () {
+                EventEmitter.defaultMaxListeners = 2;
+                EventEmitter emitter = new EventEmitter();
+                emitter.setMaxListeners(3);
+                emitter.addListener('event', () => print('Hello world'));
+                expect(() => emitter.addListener('event', () => print('Hello world')), isNot(throws));
+                expect(() => emitter.addListener('event', () => print('Hello world')), throws);
             });
         });
     });

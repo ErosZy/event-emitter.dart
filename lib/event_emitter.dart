@@ -5,11 +5,15 @@ import './event_emitter_interface.dart';
 class EventEmitter implements EventEmitterInterface {
     Map<String, List<Function>> _listeners = {};
     Map<String, List<Function>> _oneTimeListeners = {};
+    static int defaultMaxListeners = 10;
+    int _maxListeners;
 
     void addListener(String event, Function listener) {
         if (!_listeners.containsKey(event)) {
             _listeners[event] = [];
         }
+
+        verifyListenersLimit(event);
 
         _listeners[event].add(listener);
     }
@@ -23,7 +27,26 @@ class EventEmitter implements EventEmitterInterface {
             _oneTimeListeners[event] = [];
         }
 
+        verifyListenersLimit(event);
+
         _oneTimeListeners[event].add(listener);
+    }
+
+    int _getMaxListeners() {
+        if (_maxListeners == null) {
+            return defaultMaxListeners;
+        }
+
+        return _maxListeners;
+    }
+
+    void verifyListenersLimit(String event) {
+        int nextCount = ++listeners(event).length;
+        int maxListeners = _getMaxListeners();
+
+        if (nextCount >= maxListeners) {
+            throw new Exception("Max listeners count for event '$event' exceeded. Current limit is set to ${_getMaxListeners()}");
+        }
     }
 
     void removeListener(String event, Function listener) {
@@ -50,8 +73,8 @@ class EventEmitter implements EventEmitterInterface {
         }
     }
 
-    void setMaxListeners(int n) {
-
+    void setMaxListeners(int listenersCount) {
+        _maxListeners = listenersCount;
     }
 
     List listeners(String event) {
