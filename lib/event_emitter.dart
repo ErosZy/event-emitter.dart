@@ -1,8 +1,6 @@
 library event_emitter;
 
-import './event_emitter_interface.dart';
-
-class EventEmitter implements EventEmitterInterface {
+class EventEmitter {
     Map<String, List<Function>> _listeners = {};
     Map<String, List<Function>> _oneTimeListeners = {};
     static int defaultMaxListeners = 10;
