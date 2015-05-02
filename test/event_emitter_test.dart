@@ -69,5 +69,49 @@ void main() {
                 expect(emitter.listeners('some event'), isEmpty);
             });
         });
+
+        group('::removeListener', () {
+            test('should remove listener for given event', () {
+                String eventName = 'eventA';
+                Function eventHandler = () {
+                    print('Hello world');
+                };
+
+                EventEmitter emitter = new EventEmitter();
+                emitter.addListener(eventName, eventHandler);
+                emitter.removeListener(eventName, eventHandler);
+                expect(emitter.listeners(eventName), isEmpty);
+            });
+
+            test("should remove nothing if event does is not registered", () {
+                String eventAName = 'eventA';
+                String eventBName = 'eventB';
+                Function eventHandler = () {
+                    print('Hello world');
+                };
+
+                EventEmitter emitter = new EventEmitter();
+                emitter.addListener(eventAName, eventHandler);
+                emitter.removeListener(eventBName, eventHandler);
+                expect(emitter.listeners(eventAName), equals([eventHandler]));
+            });
+
+            test("should remove nothing if event has no such listener registered", () {
+                String eventAName = 'eventA';
+
+                Function eventHandler = () {
+                    print('Hello world');
+                };
+
+                Function anotherHandler = () {
+                    print('Salut!');
+                };
+
+                EventEmitter emitter = new EventEmitter();
+                emitter.addListener(eventAName, eventHandler);
+                emitter.removeListener(eventAName, anotherHandler);
+                expect(emitter.listeners(eventAName), equals([eventHandler]));
+            });
+        });
     });
 }

@@ -3,7 +3,7 @@ library event_emitter;
 import './event_emitter_interface.dart';
 
 class EventEmitter implements EventEmitterInterface {
-    Map<String, List> _listeners = {};
+    Map<String, List<Function>> _listeners = {};
 
     void addListener(String event, Function listener) {
         if (!_listeners.containsKey(event)) {
@@ -21,9 +21,10 @@ class EventEmitter implements EventEmitterInterface {
 
     }
 
-    void removeListener(event, listener)
-    {
-
+    void removeListener(String event, Function listener) {
+        if (_listeners.containsKey(event) && _listeners[event].contains(listener)) {
+            _listeners[event].remove(listener);
+        }
     }
 
     void removeAllListeners(event, listener) {
