@@ -3,8 +3,14 @@ library event_emitter;
 import './event_emitter_interface.dart';
 
 class EventEmitter implements EventEmitterInterface {
-    void addListener(event, listener) {
+    Map<String, List> _listeners = {};
 
+    void addListener(String event, Function listener) {
+        if (!_listeners.containsKey(event)) {
+            _listeners[event] = [];
+        }
+
+        _listeners[event].add(listener);
     }
 
     void on(event, listener) {
@@ -28,8 +34,12 @@ class EventEmitter implements EventEmitterInterface {
 
     }
 
-    void listeners(event) {
+    List listeners(String event) {
+        if (_listeners.containsKey(event)) {
+            return _listeners[event];
+        }
 
+        return [];
     }
 
     void emit(event, [data]) {
