@@ -3,4 +3,4 @@ dart:
   - stable
 
 script:
-  - pub run test:test
+  - ./travis.sh
