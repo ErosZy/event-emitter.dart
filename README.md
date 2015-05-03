@@ -20,13 +20,13 @@ When you've got installed `event_emitter`, you can use it however you want:
 * use `EventEmitter` as mixin.
 
 ## Limitations
-* `EventEmitter::emit` does not allow (yet!) to pass dynamic number of arguments to handler
+* `EventEmitter::emit(String param)` does not allow (yet!) to pass dynamic number of arguments to handler
 
 ## To be done
-* Create `EventInterface` to be able to hold data needed to handle event by event listener (removes need to pass dynamic number of arguments to `emit`)
+* ~~Create `EventInterface` to be able to hold data needed to handle event by event listener (removes need to pass dynamic number of arguments to `emit`)~~
+* ~~If `EventInterface` is implemented, allow to add listeners not only by string but also by event type~~
 * Create `EventHandlerInterface` to be able to hold handlers in separate classes
-* If `EventInterface` is implemented, allow to add listeners not only by string but also by event type
 * asynchronous event handling with Futures
 * add dart-docs for `EventEmitter` and related
 * publish package
-* bump up version to 0.1 when points above will be implemented
+* bump up version to 1.0.0 when points above will be implemented
