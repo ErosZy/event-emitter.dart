@@ -1,16 +1,17 @@
 library event_emitter.emitter;
 
 import './event_interface.dart';
+import './event_handler_interface.dart';
 
 typedef void EventHandlerFunction(EventInterface event);
 
 class EventEmitter {
-    Map<dynamic, List<Function>> _listeners = {};
-    Map<dynamic, List<Function>> _oneTimeListeners = {};
+    Map<dynamic, List> _listeners = {};
+    Map<dynamic, List> _oneTimeListeners = {};
     static int defaultMaxListeners = 10;
     int _maxListeners;
 
-    EventEmitter addListener(event, Function listener) {
+    EventEmitter addListener(event, listener) {
         if (!_listeners.containsKey(event)) {
             _listeners[event] = [];
         }
@@ -21,11 +22,11 @@ class EventEmitter {
         return this;
     }
 
-    EventEmitter on(event, Function listener) {
+    EventEmitter on(event, listener) {
         return addListener(event, listener);
     }
 
-    EventEmitter once(event, Function listener) {
+    EventEmitter once(event, listener) {
         if (!_oneTimeListeners.containsKey(event)) {
             _oneTimeListeners[event] = [];
         }
@@ -53,7 +54,7 @@ class EventEmitter {
         }
     }
 
-    EventEmitter removeListener(event, Function listener) {
+    EventEmitter removeListener(event, listener) {
         if (_listeners.containsKey(event) && _listeners[event].contains(listener)) {
             _listeners[event].remove(listener);
         }
@@ -106,7 +107,7 @@ class EventEmitter {
 
         if (_listeners.containsKey(eventType)) {
             handlersFound = true;
-            _listeners[eventType].forEach((Function handler) {
+            _listeners[eventType].forEach((handler) {
                 _callHandler(handler, event);
             });
         }
@@ -114,7 +115,7 @@ class EventEmitter {
         if (_oneTimeListeners.containsKey(eventType)) {
             handlersFound = true;
             for (int i = 0; i < _oneTimeListeners[eventType].length; i++) {
-                Function handler = _oneTimeListeners[eventType][i];
+                var handler = _oneTimeListeners[eventType][i];
                 _callHandler(handler, event);
                 _oneTimeListeners[eventType].removeAt(i);
             }
@@ -123,9 +124,11 @@ class EventEmitter {
         return handlersFound;
     }
 
-    void _callHandler(Function handler, [event]) {
+    void _callHandler(handler, [event]) {
         if (handler is EventHandlerFunction) {
             handler(event);
+        } else if (handler is EventHandlerInterface) {
+            (handler as EventHandlerInterface).execute(event);
         } else {
             handler();
         }
