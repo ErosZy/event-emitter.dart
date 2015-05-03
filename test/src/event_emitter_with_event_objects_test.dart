@@ -203,6 +203,16 @@ void main() {
                 emitter.emit(new SomeEvent(3));
                 expect(i, equals(3));
             });
+
+            test('should execute handler with parameters given in a list', () {
+                EventEmitter emitter = new EventEmitter();
+                int i = 0;
+                emitter.addListener(SomeEvent, (int number) {
+                    i = number;
+                });
+                emitter.emit(new SomeEvent(), [2]);
+                expect(i, equals(2));
+            });
         });
 
         group('::once', () {

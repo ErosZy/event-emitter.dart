@@ -1,5 +1,6 @@
 library event_emitter.event_emitter;
 
+import 'dart:mirrors';
 import './event_interface.dart';
 import './event_handler_interface.dart';
 
@@ -101,14 +102,14 @@ class EventEmitter {
         return result;
     }
 
-    bool emit(event) {
+    bool emit(event, [List params = const []]) {
         var eventType = event is EventInterface ? event.runtimeType : event;
         bool handlersFound = false;
 
         if (_listeners.containsKey(eventType)) {
             handlersFound = true;
             _listeners[eventType].forEach((handler) {
-                _callHandler(handler, event);
+                _callHandler(handler, event, params);
             });
         }
 
@@ -116,7 +117,7 @@ class EventEmitter {
             handlersFound = true;
             for (int i = 0; i < _oneTimeListeners[eventType].length; i++) {
                 var handler = _oneTimeListeners[eventType][i];
-                _callHandler(handler, event);
+                _callHandler(handler, event, params);
                 _oneTimeListeners[eventType].removeAt(i);
             }
         }
@@ -124,13 +125,13 @@ class EventEmitter {
         return handlersFound;
     }
 
-    void _callHandler(handler, [event]) {
+    void _callHandler(handler, [event, List params = const []]) {
         if (handler is EventHandlerFunction) {
             handler(event);
         } else if (handler is EventHandlerInterface) {
             (handler as EventHandlerInterface).execute(event);
         } else {
-            handler();
+            Function.apply(handler, params);
         }
     }
 

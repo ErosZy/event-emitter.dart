@@ -22,10 +22,6 @@ When you've got installed `event_emitter`, you can use it however you want:
 * extend your classes with `EventEmitter`,
 * use `EventEmitter` as mixin.
 
-## Limitations
-
-* `EventEmitter::emit(String param)` does not allow (yet!) to pass dynamic number of arguments to handler
-
 ## To be done
 
 * asynchronous event handling with Futures
