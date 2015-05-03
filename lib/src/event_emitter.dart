@@ -1,4 +1,4 @@
-library event_emitter.emitter;
+library event_emitter.event_emitter;
 
 import './event_interface.dart';
 import './event_handler_interface.dart';
