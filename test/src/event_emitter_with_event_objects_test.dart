@@ -195,6 +195,14 @@ void main() {
                 emitter.emit(new SomeEvent());
                 expect(i, equals(2));
             });
+
+            test('should execute handler with event if handler is EventHandlerFunction', () {
+                EventEmitter emitter = new EventEmitter();
+                int i = 1;
+                emitter.addListener(SomeEvent, (SomeEvent event) => i = event.i);
+                emitter.emit(new SomeEvent(3));
+                expect(i, equals(3));
+            });
         });
 
         group('::once', () {

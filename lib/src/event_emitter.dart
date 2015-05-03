@@ -2,6 +2,8 @@ library event_emitter.emitter;
 
 import './event_interface.dart';
 
+typedef void EventHandlerFunction(EventInterface event);
+
 class EventEmitter {
     Map<dynamic, List<Function>> _listeners = {};
     Map<dynamic, List<Function>> _oneTimeListeners = {};
@@ -99,39 +101,13 @@ class EventEmitter {
     }
 
     bool emit(event) {
-        if (event is EventInterface) {
-            return _emitEvent(event);
-        }
-
+        var eventType = event is EventInterface ? event.runtimeType : event;
         bool handlersFound = false;
-
-        if (_listeners.containsKey(event)) {
-            handlersFound = true;
-            _listeners[event].forEach((Function handler) {
-                handler();
-            });
-        }
-
-        if (_oneTimeListeners.containsKey(event)) {
-            handlersFound = true;
-            for (int i = 0; i < _oneTimeListeners[event].length; i++) {
-                Function handler = _oneTimeListeners[event][i];
-                handler();
-                _oneTimeListeners[event].removeAt(i);
-            }
-        }
-
-        return handlersFound;
-    }
-
-    bool _emitEvent(EventInterface event) {
-        bool handlersFound = false;
-        Type eventType = event.runtimeType;
 
         if (_listeners.containsKey(eventType)) {
             handlersFound = true;
             _listeners[eventType].forEach((Function handler) {
-                handler();
+                _callHandler(handler, event);
             });
         }
 
@@ -139,12 +115,20 @@ class EventEmitter {
             handlersFound = true;
             for (int i = 0; i < _oneTimeListeners[eventType].length; i++) {
                 Function handler = _oneTimeListeners[eventType][i];
-                handler();
+                _callHandler(handler, event);
                 _oneTimeListeners[eventType].removeAt(i);
             }
         }
 
         return handlersFound;
+    }
+
+    void _callHandler(Function handler, [event]) {
+        if (handler is EventHandlerFunction) {
+            handler(event);
+        } else {
+            handler();
+        }
     }
 
     static int listenerCount(EventEmitter emitter, event) {
