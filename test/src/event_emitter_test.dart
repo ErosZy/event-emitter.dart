@@ -235,5 +235,66 @@ void main() {
                 expect(() => emitter.addListener('event', () => print('Hello world')), throws);
             });
         });
+
+        group('self-emitted bundled events', () {
+            group("it should emit emit 'newEvent' when new event is added", () {
+                test('by ::addListener', () {
+                    EventEmitter emitter = new EventEmitter();
+                    String eventName = 'event';
+                    Function originalHandler = () {
+                        print('Hello world');
+                    };
+
+                    String calledEvent;
+                    Function calledHandler;
+
+                    emitter.addListener('newListener', (String event, Function handler) {
+                        calledEvent = event;
+                        calledHandler = handler;
+                    });
+                    emitter.addListener(eventName, originalHandler);
+                    expect(calledEvent, equals(eventName));
+                    expect(calledHandler, equals(originalHandler));
+                });
+
+                test('by ::on', () {
+                    EventEmitter emitter = new EventEmitter();
+                    String eventName = 'event';
+                    Function originalHandler = () {
+                        print('Hello world');
+                    };
+
+                    String calledEvent;
+                    Function calledHandler;
+
+                    emitter.addListener('newListener', (String event, Function handler) {
+                        calledEvent = event;
+                        calledHandler = handler;
+                    });
+                    emitter.on(eventName, originalHandler);
+                    expect(calledEvent, equals(eventName));
+                    expect(calledHandler, equals(originalHandler));
+                });
+
+                test('by ::once', () {
+                    EventEmitter emitter = new EventEmitter();
+                    String eventName = 'event';
+                    Function originalHandler = () {
+                        print('Hello world');
+                    };
+
+                    String calledEvent;
+                    Function calledHandler;
+
+                    emitter.addListener('newListener', (String event, Function handler) {
+                        calledEvent = event;
+                        calledHandler = handler;
+                    });
+                    emitter.once(eventName, originalHandler);
+                    expect(calledEvent, equals(eventName));
+                    expect(calledHandler, equals(originalHandler));
+                });
+            });
+        });
     });
 }

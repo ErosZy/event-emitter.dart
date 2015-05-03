@@ -20,6 +20,8 @@ class EventEmitter {
         _verifyListenersLimit(event);
         _listeners[event].add(listener);
 
+        emit('newListener', [event, listener]);
+
         return this;
     }
 
@@ -34,6 +36,8 @@ class EventEmitter {
 
         _verifyListenersLimit(event);
         _oneTimeListeners[event].add(listener);
+
+        emit('newListener', [event, listener]);
 
         return this;
     }
