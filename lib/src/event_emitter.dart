@@ -1,12 +1,14 @@
 library event_emitter.emitter;
 
+import './event_interface.dart';
+
 class EventEmitter {
-    Map<String, List<Function>> _listeners = {};
-    Map<String, List<Function>> _oneTimeListeners = {};
+    Map<dynamic, List<Function>> _listeners = {};
+    Map<dynamic, List<Function>> _oneTimeListeners = {};
     static int defaultMaxListeners = 10;
     int _maxListeners;
 
-    EventEmitter addListener(String event, Function listener) {
+    EventEmitter addListener(event, Function listener) {
         if (!_listeners.containsKey(event)) {
             _listeners[event] = [];
         }
@@ -17,11 +19,11 @@ class EventEmitter {
         return this;
     }
 
-    EventEmitter on(String event, Function listener) {
+    EventEmitter on(event, Function listener) {
         return addListener(event, listener);
     }
 
-    EventEmitter once(String event, Function listener) {
+    EventEmitter once(event, Function listener) {
         if (!_oneTimeListeners.containsKey(event)) {
             _oneTimeListeners[event] = [];
         }
@@ -40,7 +42,7 @@ class EventEmitter {
         return _maxListeners;
     }
 
-    void _verifyListenersLimit(String event) {
+    void _verifyListenersLimit(event) {
         int nextCount = ++listeners(event).length;
         int maxListeners = _getMaxListeners();
 
@@ -49,7 +51,7 @@ class EventEmitter {
         }
     }
 
-    EventEmitter removeListener(String event, Function listener) {
+    EventEmitter removeListener(event, Function listener) {
         if (_listeners.containsKey(event) && _listeners[event].contains(listener)) {
             _listeners[event].remove(listener);
         }
@@ -61,7 +63,7 @@ class EventEmitter {
         return this;
     }
 
-    EventEmitter removeAllListeners([String event]) {
+    EventEmitter removeAllListeners([event]) {
         if (event == null) {
             _listeners.clear();
         } else{
@@ -83,7 +85,7 @@ class EventEmitter {
         return this;
     }
 
-    List listeners(String event) {
+    List listeners(event) {
         List result = [];
         if (_listeners.containsKey(event)) {
             result.addAll(_listeners[event]);
@@ -96,7 +98,11 @@ class EventEmitter {
         return result;
     }
 
-    bool emit(String event) {
+    bool emit(event) {
+        if (event is EventInterface) {
+            return _emitEvent(event);
+        }
+
         bool handlersFound = false;
 
         if (_listeners.containsKey(event)) {
@@ -118,7 +124,30 @@ class EventEmitter {
         return handlersFound;
     }
 
-    static int listenerCount(EventEmitter emitter, String event) {
+    bool _emitEvent(EventInterface event) {
+        bool handlersFound = false;
+        Type eventType = event.runtimeType;
+
+        if (_listeners.containsKey(eventType)) {
+            handlersFound = true;
+            _listeners[eventType].forEach((Function handler) {
+                handler();
+            });
+        }
+
+        if (_oneTimeListeners.containsKey(eventType)) {
+            handlersFound = true;
+            for (int i = 0; i < _oneTimeListeners[eventType].length; i++) {
+                Function handler = _oneTimeListeners[eventType][i];
+                handler();
+                _oneTimeListeners[eventType].removeAt(i);
+            }
+        }
+
+        return handlersFound;
+    }
+
+    static int listenerCount(EventEmitter emitter, event) {
         return emitter.listeners(event).length;
     }
 }
