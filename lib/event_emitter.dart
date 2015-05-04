@@ -1,3 +1,4 @@
+/// Main Event emitter library
 library event_emitter;
 
 part 'src/interface/event_interface.dart';
@@ -5,14 +6,25 @@ part 'src/interface/event_handler_interface.dart';
 part 'src/events/new_listener_event.dart';
 part 'src/events/remove_listener_event.dart';
 
+/// The look of handler function that can be executed when adding an [EventInterface] event
 typedef void EventHandlerFunction(EventInterface event);
 
+/// EventEmitter class
 class EventEmitter {
+    /// Method [setMaxListeners] sets the maximum on a per-instance basis.
+    /// This class property lets you set it for all [EventEmitter] instances, current and future, effective immediately. Use with care.
+    /// Note that [setMaxListeners] still has precedence over [defaultMaxListeners].
+    static int defaultMaxListeners = 10;
+
     Map<dynamic, List> _listeners = {};
     Map<dynamic, List> _oneTimeListeners = {};
-    static int defaultMaxListeners = 10;
     int _maxListeners;
 
+    /// Adds a listener to the end of the listeners array for the specified event.
+    /// No checks are made to see if the listener has already been added.
+    /// Multiple calls passing the same combination of event and listener will result in the listener being added multiple times.
+    /// You can pass [String] or [EventInterface] object **Type** as event.
+    /// Listener can be either simple function or [EventHandlerInterface] object
     EventEmitter addListener(event, listener) {
         if (!_listeners.containsKey(event)) {
             _listeners[event] = [];
@@ -27,10 +39,15 @@ class EventEmitter {
         return this;
     }
 
+    /// Adds a listener to the end of the listeners array for the specified event.
+    /// No checks are made to see if the listener has already been added.
+    /// Multiple calls passing the same combination of event and listener will result in the listener being added multiple times.
     EventEmitter on(event, listener) {
         return addListener(event, listener);
     }
 
+    /// Adds a **one time** listener for the event.
+    /// This listener is invoked only the next time the event is fired, after which it is removed.
     EventEmitter once(event, listener) {
         if (!_oneTimeListeners.containsKey(event)) {
             _oneTimeListeners[event] = [];
@@ -62,6 +79,12 @@ class EventEmitter {
         }
     }
 
+    /// Remove a listener from the listener array for the specified event.
+    /// **Caution**: changes array indices in the listener array behind the listener.
+    /// [removeListener] will remove, at most, one instance of a listener from the listener array.
+    /// If any single listener has been added multiple times to the listener array for the specified event,
+    /// then [removeListener] must be called multiple times to remove each instance.
+    /// Returns [EventEmitter], so calls can be chained.
     EventEmitter removeListener(event, listener) {
         if (_listeners.containsKey(event) && _listeners[event].contains(listener)) {
             _listeners[event].remove(listener);
@@ -78,6 +101,9 @@ class EventEmitter {
         return this;
     }
 
+    /// Removes all listeners, or those of the specified event.
+    /// It's not a good idea to remove listeners that were added elsewhere in the code, especially when it's on an emitter that you didn't create
+    /// Returns emitter, so calls can be chained.
     EventEmitter removeAllListeners([event]) {
         if (event == null) {
             _listeners.forEach((eventName, List handlers) {
@@ -115,12 +141,17 @@ class EventEmitter {
         return this;
     }
 
+    /// By default EventEmitters will print a warning if more than 10 listeners are added for a particular event.
+    /// This is a useful default which helps finding memory leaks.
+    /// Obviously not all Emitters should be limited to 10. This function allows that to be increased. Set to zero for unlimited.
+    /// Returns emitter, so calls can be chained.
     EventEmitter setMaxListeners(int listenersCount) {
         _maxListeners = listenersCount;
 
         return this;
     }
 
+    /// Returns a list of listeners for the specified event.
     List listeners(event) {
         List result = [];
         if (_listeners.containsKey(event)) {
@@ -134,6 +165,9 @@ class EventEmitter {
         return result;
     }
 
+    /// Execute each of the listeners in order with the supplied arguments.
+    ///
+    /// Returns true if event had listeners, false otherwise.
     bool emit(event, [List params = const []]) {
         var eventType = event is EventInterface ? event.runtimeType : event;
         bool handlersFound = false;
@@ -167,6 +201,7 @@ class EventEmitter {
         }
     }
 
+    /// Return the number of listeners for a given event.
     static int listenerCount(EventEmitter emitter, event) {
         return emitter.listeners(event).length;
     }
