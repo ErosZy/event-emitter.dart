@@ -1,4 +1,4 @@
-name: event_emitter
+name: dart_event_emitter
 version: 1.0.0
 homepage: https://github.com/eps90/event-emitter.dart
 description: Simple EventEmitter implementation in Dart

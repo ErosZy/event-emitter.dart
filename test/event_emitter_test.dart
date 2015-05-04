@@ -1,7 +1,7 @@
 library test.event_emitter;
 
 import 'package:test/test.dart';
-import 'package:event-emitter/event_emitter.dart';
+import 'package:dart_event_emitter/dart_event_emitter.dart';
 
 void main() {
     group('Event emitter', () {

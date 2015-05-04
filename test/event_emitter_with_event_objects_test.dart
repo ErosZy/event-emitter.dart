@@ -1,7 +1,7 @@
 library test.event_emitter.event_emitter_with_event_objects;
 
 import 'package:test/test.dart';
-import 'package:event-emitter/event_emitter.dart';
+import 'package:dart_event_emitter/dart_event_emitter.dart';
 
 class SomeEvent implements EventInterface {
     int i;

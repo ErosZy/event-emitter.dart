@@ -1,5 +1,5 @@
 /// Main Event emitter library
-library event_emitter;
+library dart_event_emitter;
 
 part 'src/interface/event_interface.dart';
 part 'src/interface/event_handler_interface.dart';
