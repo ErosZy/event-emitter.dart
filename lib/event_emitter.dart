@@ -1,9 +1,9 @@
 library event_emitter;
 
-part 'interface/event_interface.dart';
-part 'interface/event_handler_interface.dart';
-part 'events/new_listener_event.dart';
-part 'events/remove_listener_event.dart';
+part 'src/interface/event_interface.dart';
+part 'src/interface/event_handler_interface.dart';
+part 'src/events/new_listener_event.dart';
+part 'src/events/remove_listener_event.dart';
 
 typedef void EventHandlerFunction(EventInterface event);
 
