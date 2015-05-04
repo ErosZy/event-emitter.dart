@@ -4,4 +4,4 @@ dart:
   - dev
 
 script:
-  - tools/travis.sh
+  - tool/travis.sh
