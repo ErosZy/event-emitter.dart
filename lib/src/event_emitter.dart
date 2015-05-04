@@ -62,10 +62,12 @@ class EventEmitter {
     EventEmitter removeListener(event, listener) {
         if (_listeners.containsKey(event) && _listeners[event].contains(listener)) {
             _listeners[event].remove(listener);
+            emit('removeListener', [event, listener]);
         }
 
         if (_oneTimeListeners.containsKey(event) && _oneTimeListeners[event].contains(listener)) {
             _oneTimeListeners[event].remove(listener);
+            emit('removeListener', [event, listener]);
         }
 
         return this;
@@ -73,13 +75,32 @@ class EventEmitter {
 
     EventEmitter removeAllListeners([event]) {
         if (event == null) {
+            _listeners.forEach((eventName, List handlers) {
+                if (eventName != 'removeListener') {
+                    for (int i = 0; i < handlers.length; i++) {
+                        emit('removeListener', [eventName, handlers[i]]);
+                        handlers.removeAt(i);
+                    }
+                }
+            });
+            
             _listeners.clear();
         } else{
-            if (_listeners.containsKey(event)) {
+            if (_listeners.containsKey(event) && event != 'removeListener') {
+                for (int i = 0; i < _listeners[event].length; i++) {
+                    emit('removeListener', [event, _listeners[event][i]]);
+                    _listeners[event].removeAt(i);
+                }
+                
                 _listeners[event].clear();
             }
 
-            if (_oneTimeListeners.containsKey(event)) {
+            if (_oneTimeListeners.containsKey(event) && event != 'removeListener') {
+                for (int i = 0; i < _oneTimeListeners[event].length; i++) {
+                    emit('removeListener', [event, _oneTimeListeners[event][i]]);
+                    _oneTimeListeners[event].removeAt(i);
+                }
+                
                 _oneTimeListeners[event].clear();
             }
         }

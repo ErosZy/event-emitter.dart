@@ -295,6 +295,88 @@ void main() {
                     expect(calledHandler, equals(originalHandler));
                 });
             });
+
+            group("it should emit 'removeListener' when listener is being removed", () {
+                test('by ::removeListener', () {
+                    EventEmitter emitter = new EventEmitter();
+                    String eventName = 'event';
+                    Function originalHandler = () {
+                        print('Hello world');
+                    };
+
+                    String calledEvent;
+                    Function calledHandler;
+
+                    emitter.addListener(eventName, originalHandler);
+                    emitter.addListener('removeListener', (String event, Function handler) {
+                        calledEvent = event;
+                        calledHandler = handler;
+                    });
+                    emitter.removeListener(eventName, originalHandler);
+                    expect(calledEvent, equals(eventName));
+                    expect(calledHandler, equals(originalHandler));
+                });
+
+                test('by ::removeListener of one-time event', () {
+                    EventEmitter emitter = new EventEmitter();
+                    String eventName = 'event';
+                    Function originalHandler = () {
+                        print('Hello world');
+                    };
+
+                    String calledEvent;
+                    Function calledHandler;
+
+                    emitter.once(eventName, originalHandler);
+                    emitter.addListener('removeListener', (String event, Function handler) {
+                        calledEvent = event;
+                        calledHandler = handler;
+                    });
+                    emitter.removeListener(eventName, originalHandler);
+                    expect(calledEvent, equals(eventName));
+                    expect(calledHandler, equals(originalHandler));
+                });
+
+                test('by ::removeAllListeners', () {
+                    EventEmitter emitter = new EventEmitter();
+                    String eventName = 'event';
+                    Function originalHandler = () {
+                        print('Hello world');
+                    };
+
+                    String calledEvent;
+                    Function calledHandler;
+
+                    emitter.once(eventName, originalHandler);
+                    emitter.addListener('removeListener', (String event, Function handler) {
+                        calledEvent = event;
+                        calledHandler = handler;
+                    });
+                    emitter.removeAllListeners(eventName);
+                    expect(calledEvent, equals(eventName));
+                    expect(calledHandler, equals(originalHandler));
+                });
+
+                test('by ::removeAllListeners with no event name provided', () {
+                    EventEmitter emitter = new EventEmitter();
+                    String eventName = 'event';
+                    Function originalHandler = () {
+                        print('Hello world');
+                    };
+
+                    String calledEvent;
+                    Function calledHandler;
+
+                    emitter.addListener(eventName, originalHandler);
+                    emitter.addListener('removeListener', (String event, Function handler) {
+                        calledEvent = event;
+                        calledHandler = handler;
+                    });
+                    emitter.removeAllListeners();
+                    expect(calledEvent, equals(eventName));
+                    expect(calledHandler, equals(originalHandler));
+                });
+            });
         });
     });
 }
