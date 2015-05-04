@@ -1,6 +1,4 @@
-library event_emitter.event_handler_interface;
-
-import './event_interface.dart';
+part of event_emitter.event_emitter;
 
 abstract class EventHandlerInterface {
     void execute(EventInterface event);

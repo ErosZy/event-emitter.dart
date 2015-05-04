@@ -1,6 +1,4 @@
-library event_emitter.event.remove_listener;
-
-import './../event_interface.dart';
+part of event_emitter.event_emitter;
 
 class RemoveListenerEvent implements EventInterface {
     static const NAME = 'removeListener';
