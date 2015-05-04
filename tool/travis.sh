@@ -2,7 +2,7 @@
 
 set -e
 
-dartanalyzer --fatal-warnings lib/event_emitter.dart
+dartanalyzer --fatal-warnings lib/dart_event_emitter.dart
 
 pub run test:test
 
