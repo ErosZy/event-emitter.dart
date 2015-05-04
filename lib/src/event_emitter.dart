@@ -12,6 +12,9 @@ class EventEmitter {
     static int defaultMaxListeners = 10;
     int _maxListeners;
 
+    static const String _NEW_LISTENER_EVENT_NAME = 'newListener';
+    static const String _REMOVE_LISTENER_EVENT_NAME = 'removeListener';
+
     EventEmitter addListener(event, listener) {
         if (!_listeners.containsKey(event)) {
             _listeners[event] = [];
@@ -20,7 +23,7 @@ class EventEmitter {
         _verifyListenersLimit(event);
         _listeners[event].add(listener);
 
-        emit('newListener', [event, listener]);
+        emit(_NEW_LISTENER_EVENT_NAME, [event, listener]);
 
         return this;
     }
@@ -37,7 +40,7 @@ class EventEmitter {
         _verifyListenersLimit(event);
         _oneTimeListeners[event].add(listener);
 
-        emit('newListener', [event, listener]);
+        emit(_NEW_LISTENER_EVENT_NAME, [event, listener]);
 
         return this;
     }
@@ -62,12 +65,12 @@ class EventEmitter {
     EventEmitter removeListener(event, listener) {
         if (_listeners.containsKey(event) && _listeners[event].contains(listener)) {
             _listeners[event].remove(listener);
-            emit('removeListener', [event, listener]);
+            emit(_REMOVE_LISTENER_EVENT_NAME, [event, listener]);
         }
 
         if (_oneTimeListeners.containsKey(event) && _oneTimeListeners[event].contains(listener)) {
             _oneTimeListeners[event].remove(listener);
-            emit('removeListener', [event, listener]);
+            emit(_REMOVE_LISTENER_EVENT_NAME, [event, listener]);
         }
 
         return this;
@@ -76,9 +79,9 @@ class EventEmitter {
     EventEmitter removeAllListeners([event]) {
         if (event == null) {
             _listeners.forEach((eventName, List handlers) {
-                if (eventName != 'removeListener') {
+                if (eventName != _REMOVE_LISTENER_EVENT_NAME) {
                     for (int i = 0; i < handlers.length; i++) {
-                        emit('removeListener', [eventName, handlers[i]]);
+                        emit(_REMOVE_LISTENER_EVENT_NAME, [eventName, handlers[i]]);
                         handlers.removeAt(i);
                     }
                 }
@@ -86,18 +89,18 @@ class EventEmitter {
             
             _listeners.clear();
         } else{
-            if (_listeners.containsKey(event) && event != 'removeListener') {
+            if (_listeners.containsKey(event) && event != _REMOVE_LISTENER_EVENT_NAME) {
                 for (int i = 0; i < _listeners[event].length; i++) {
-                    emit('removeListener', [event, _listeners[event][i]]);
+                    emit(_REMOVE_LISTENER_EVENT_NAME, [event, _listeners[event][i]]);
                     _listeners[event].removeAt(i);
                 }
                 
                 _listeners[event].clear();
             }
 
-            if (_oneTimeListeners.containsKey(event) && event != 'removeListener') {
+            if (_oneTimeListeners.containsKey(event) && event != _REMOVE_LISTENER_EVENT_NAME) {
                 for (int i = 0; i < _oneTimeListeners[event].length; i++) {
-                    emit('removeListener', [event, _oneTimeListeners[event][i]]);
+                    emit(_REMOVE_LISTENER_EVENT_NAME, [event, _oneTimeListeners[event][i]]);
                     _oneTimeListeners[event].removeAt(i);
                 }
                 
