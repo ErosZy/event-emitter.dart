@@ -1,7 +1,7 @@
 library event_emitter;
 
-part 'event_interface.dart';
-part 'event_handler_interface.dart';
+part 'interface/event_interface.dart';
+part 'interface/event_handler_interface.dart';
 part 'events/new_listener_event.dart';
 part 'events/remove_listener_event.dart';
 
