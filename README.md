@@ -1,4 +1,4 @@
-# DartEventEmitter.dart
+# DartEventEmitter
 
 [![Build Status](https://travis-ci.org/eps90/event-emitter.dart.svg?branch=master)](https://travis-ci.org/eps90/event-emitter.dart)
 [![Coverage Status](https://coveralls.io/repos/eps90/event-emitter.dart/badge.svg?branch=master)](https://coveralls.io/r/eps90/event-emitter.dart?branch=master)
@@ -17,7 +17,7 @@ dependencies:
 Then import `dart_event_emitter` in your project
 
 ```dart
-import 'dart_event_emitter/dart_event_emitter.dart';
+import 'package:dart_event_emitter/dart_event_emitter.dart';
 ```
 
 ## Usage

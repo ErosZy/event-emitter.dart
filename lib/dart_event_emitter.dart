@@ -9,7 +9,7 @@
 ///
 /// Then import `dart_event_emitter` in your project
 ///
-///     import 'dart_event_emitter/dart_event_emitter.dart';
+///     import 'package:dart_event_emitter/dart_event_emitter.dart';
 ///
 /// ## Usage
 ///
