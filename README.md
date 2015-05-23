@@ -5,20 +5,59 @@
 
 Basic implementation of EventEmitter in Dart - a port of Node.js' [EventEmitter](https://nodejs.org/api/events.html#events_class_events_eventemitter) enhanced with Dart goodness.
 
-# Installation
+## Installation
 
-To install package in your system, declare it as a dependency:
+To install package in your system, declare it as a dependency in `pubspec.yaml`:
 
 ```yaml
 dependencies:
     dart_event_emitter: ">=1.0.0 <2.0.0"
 ```
 
-When you've got installed `dart_event_emitter`, you can use it however you want:
+Then import `dart_event_emitter` in your project
 
-* as an `EventEmitter` class instance,
-* extend your classes with `EventEmitter`,
-* use `EventEmitter` as mixin.
+```dart
+import 'dart_event_emitter/dart_event_emitter.dart';
+```
+
+## Usage
+
+### As an instance
+
+You can treat `EventEmitter` class as a object holding data about your events:
+
+```dart
+class MyAwesomeClass {
+    EventEmitter _emitter = new EventEmitter();
+    
+    MyAwesomeClass() {
+        _emitter.on('action', () {
+            print 'Action recorded!';
+        });
+    }
+    
+    void doAwesomeThings() {
+        _emitter.emit('action');
+    }
+}
+```
+
+### As a parent class
+You can also decide that your class be responsible for own events:
+
+```dart
+class MyAwesomeClass extends EventEmitter {
+    MyAwesomeClass() {
+        on('action', () {
+            print 'Action recorded!';
+        });
+    }
+    
+    void doAwesomeThings() {
+        emit('action');
+    }
+}
+```
 
 ## To be done
 
